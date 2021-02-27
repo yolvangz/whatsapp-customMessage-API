@@ -64,28 +64,31 @@ class CustomWA {
 	*/
 	createLink (text = null) {
 		// Check the datatype of text
-		switch (typeof text) {
+		if (text === null || text === '') {
 			// Text was not defined, so return the complete URL (with no text defined)
-			case 'null':
-				return encodeURI(`${this.url}phone=${this.phone}`);
-			// text maybe is an object
-			case 'object':
-				// Break if it's really an object, not an array
-				if (!Array.isArray(text)) {
-					throw 'Text is an object';
-					break;
-				}
-			// Default case for else datatypes (String, Number, Boolean, Array)
-			default:
-				// Codify the given text & keep it on a variable
-				let codedText = encodeURI(text);
-				// Check if text is too large, so throw an error. Else, return the complete URL
-				if (codedText.length > this.limit) {
-					throw 'Sorry, message is too large :(';
-					break;
-				} else {
-					return `${this.url}phone=${this.phone}&text=${codedText}`;
-				}
+			return encodeURI(`${this.url}phone=${this.phone}`);
+
+		} else {
+			switch (typeof text) {
+				// text maybe is an object
+				case 'object':
+					// Break if it's really an object, not an array
+					if (!Array.isArray(text)) {
+						throw 'Text is an object';
+						break;
+					}
+				// Default case for else datatypes (String, Number, Boolean, Array)
+				default:
+					// Codify the given text & keep it on a variable
+					let codedText = encodeURI(text);
+					// Check if text is too large, so throw an error. Else, return the complete URL
+					if (codedText.length > this.limit) {
+						throw 'Sorry, message is too large :(';
+						break;
+					} else {
+						return `${this.url}phone=${this.phone}&text=${codedText}`;
+					}
+			}
 		}
 	}
 	/*
