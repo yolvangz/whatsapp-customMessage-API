@@ -8,6 +8,16 @@
 <body>
 
 	<!-- Calling main.js file -->
-	<script type="module" src="main.js"></script>
+	<script src="wa-custom.js"></script>
+	<script>
+		// Code to initialize API & use it
+		"use strict"
+
+		let wa = new CustomWA(58, 4146992200);
+		console.log(wa);
+		console.log(wa.code);
+		console.log(wa.number);
+		console.log(wa.phone);
+	</script>
 </body>
 </html>
