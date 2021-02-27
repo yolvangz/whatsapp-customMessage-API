@@ -6,18 +6,22 @@
 	<title>Testing WhatsApp-customMessage-API</title>
 </head>
 <body>
-
+	<a href="" id="link">Link WA</a>
 	<!-- Calling main.js file -->
 	<script src="wa-custom.js"></script>
 	<script>
 		// Code to initialize API & use it
 		"use strict"
 
-		let wa = new CustomWA(58, 4146992200);
+		let wa = new CustomWA(58, 4146882171);
 		console.log(wa);
 		console.log(wa.code);
 		console.log(wa.number);
 		console.log(wa.phone);
+		let WALink = wa.getLink("What's *up*");
+		console.log(wa.getLink(WALink));
+
+		document.getElementById('link').href = WALink;
 	</script>
 </body>
 </html>

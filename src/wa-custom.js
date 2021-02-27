@@ -46,6 +46,19 @@ class CustomWA {
 	}
 	// Public Methods
 	// ------------------
+
+	/*
+		Return a custom WhatsApp link, with a custom number phone
+		number defined by the instance properties & an custom text
+		passed by a parameter (optional)
+	*/
+	getLink (text = null) {
+		if (text == null) {
+			return encodeURI(`${this.url}phone=${this.phone}`);
+		} else {
+			return encodeURI(`${this.url}phone=${this.phone}&text=${text}`);
+		}
+	}
 }
 
 /* Other functions
@@ -70,7 +83,7 @@ function validNumber (value = null, options = {name: 'unknown',	length: null}) {
 					if (options.length === value.toString().length) {
 						return value;
 					} else {
-						throw `Sorry, ${value} is an invalid length of value on parametter '${options.name}'.`;
+						throw `Sorry, ${value} is an invalid length of value on parameter '${options.name}'.`;
 					}
 				case 'object':
 					var counter = 0;
@@ -83,13 +96,13 @@ function validNumber (value = null, options = {name: 'unknown',	length: null}) {
 								if (value.toString().length <= options.length[property]) {counter++;} else {counter--;}
 								break;
 							default:
-								throw `Sorry, '${property }' is an invalid parametter from 'length' property in options on ${options.name}.`;
+								throw `Sorry, '${property }' is an invalid parameter from 'length' property in options on ${options.name}.`;
 						}
 					}
 					if (counter > 0) {
 						return value;
 					} else {
-						throw `Sorry, ${value} is an invalid length of value on parametter '${options.name}'`;
+						throw `Sorry, ${value} is an invalid length of value on parameter '${options.name}'`;
 					}
 					break;
 			}
