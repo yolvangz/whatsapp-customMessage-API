@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Testing WhatsApp-customMessage-API</title>
+	<style>
+		fieldset{
+			width: 75%;
+			margin: 0 auto;
+		}
+	</style>
+</head>
+<body>
+	<fieldset>
+		<legend><h3>Crear Link</h3></legend>
+		<form class="WA-form" action="#">
+			<div>
+				<label for="WA-code">Código de País</label><br>
+				<input name="WA-code" type="number" max="999" min="0" placeholder="Example: 58" style="width: 100px">
+			</div>
+			<div>
+				<label for="WA-phone">Número de teléfono (sin cero al final)</label><br>
+				<input name="WA-phone" type="text" maxlength="10" placeholder="Example: 4321098765">
+			</div>
+			<div>
+				<label for="WA-text">Mensaje (opcional)</label><br>
+				<textarea name="WA-text"></textarea>
+			</div>
+			<button name="WA-submit" type="submit" data-type="create">Generar link</button>
+			<br>
+			<textarea name="WA-result" class="WA-result" rows="10"></textarea>
+		</form>
+	</fieldset>
+	<fieldset>
+		<legend><h3>Enviar Link</h3></legend>
+		<form class="WA-form" action="#">
+			<div>
+				<label for="WA-code">Código de País</label><br>
+				<input name="WA-code" type="number" max="999" min="0" placeholder="Example: 58" style="width: 100px">
+			</div>
+			<div>
+				<label for="WA-phone">Número de teléfono (sin cero al final)</label><br>
+				<input  name="WA-phone" type="text" maxlength="10" placeholder="Example: 4321098765">
+			</div>
+			<div>
+				<label for="WA-text">Mensaje (opcional)</label><br>
+				<textarea name="WA-text"></textarea>
+			</div>
+			<button name="WA-submit" type="submit" data-type="send">Enviar link</button>
+		</form>
+	</fieldset>
+	<!-- Calling API library -->
+	<script src="wa-custom.js"></script>
+	<script>
+		// Code to initialize API & use it
+		window.addEventListener('load', () => {
+			"use strict"
+			let submitButtons = document.querySelectorAll('.WA-form button[type="submit"]');
+			for (var i = 0; i < submitButtons.length; i++) {
+				submitButtons[i].addEventListener('click', processWAForm);
+			}
+		});
+	</script>
+</body>
+</html>
