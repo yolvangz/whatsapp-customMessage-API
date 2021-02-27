@@ -28,7 +28,7 @@ class CustomWA {
 			});
 			this._limit = 300;
 		} catch (e) {
-			console.error(e);
+			throw e;
 		}
 	}
 	// Getters
@@ -102,62 +102,107 @@ class CustomWA {
 
 /* Other functions
    ==================
-	- Number: validNumber (value, options): Returns the number after check is valid. Else, throws an datatype error.
+	- Number: validNumber (value, options): Returns the number after check is valid. Else,
+	  throws an datatype error.
+	- Function: processWAForm (event): Process the info given in a form to run any of the
+	  two methods from the API (create or send link).
 */
 // Return value after check is valid, else throws an error
-function validNumber (value = null, options = {name: 'unknown',	length: null}) {
-		// Check if datatype of number is valid
-		if (typeof value !== 'number'){
-			throw `Sorry, '${value}' has an invalid datatype on parameter '${options.name}'.`;
-		} else if (value < 0) {
-			throw `Sorry, '${value}' is an invalid country code.`
-		} else {
-			// Check if length option is defined & which value is it.
-			switch (typeof options.length) {
-				// Options are not defined.
-				case 'null':
+const validNumber = (value = null, options = {name: 'unknown',	length: null}) => {
+	// Check if datatype of number is valid
+	if (typeof value !== 'number'){
+		throw `Sorry, '${value}' has an invalid datatype on parameter '${options.name}'.`;
+	} else if (value < 0) {
+		throw `Sorry, '${value}' is an invalid country code.`
+	} else {
+		// Check if length option is defined & which value is it.
+		switch (typeof options.length) {
+			// Options are not defined.
+			case 'null':
+				return value;
+			// Options are defined, but length property not.
+			case 'undefined':
+				return value;
+			// value must has the exact given length (fixed number)
+			case 'number':
+				// If value is VALID, return. Else, is INVALID & throws an error.
+				if (options.length === value.toString().length) {
 					return value;
-				// Options are defined, but length property not.
-				case 'undefined':
+				} else {
+					throw `Sorry, ${value} is an invalid length of value on parameter '${options.name}'.`;
+				}
+			// Value must meet certain given criteria: min & max length
+			case 'object':
+				/*
+					Create a variable called 'counter'.
+					If any criteria is accomplished, counter sums a point. Else, rest a point.
+					So, if counter is greater (1 || 2) than zero (0), criteria was accomplished & value is VALID.
+					Else, if counter is less or equal (0 || -2) than zero, criteria was NOT accomplished $ value is INVALID.
+					In case that as value as any parameters given are INVALID, throws an error.
+				*/
+				var counter = 0;
+				// Loops throw the criteria parameters
+				for(let property in options.length){
+					// Check the criteria
+					switch (property) {
+						case 'min':
+							if (value.toString().length >= options.length[property]) {counter++;} else {counter--;}
+							break;
+						case 'max':
+							if (value.toString().length <= options.length[property]) {counter++;} else {counter--;}
+							break;
+						default:
+							throw `Sorry, '${property}' is an invalid parameter from 'length' property in options on ${options.name}.`;
+					}
+				}
+				if (counter > 0) {
 					return value;
-				// value must has the exact given length (fixed number)
-				case 'number':
-					// If value is VALID, return. Else, is INVALID & throws an error.
-					if (options.length === value.toString().length) {
-						return value;
-					} else {
-						throw `Sorry, ${value} is an invalid length of value on parameter '${options.name}'.`;
-					}
-				// Value must meet certain given criteria: min & max length
-				case 'object':
-					/*
-						Create a variable called 'counter'.
-						If any criteria is accomplished, counter sums a point. Else, rest a point.
-						So, if counter is greater (1 || 2) than zero (0), criteria was accomplished & value is VALID.
-						Else, if counter is less or equal (0 || -2) than zero, criteria was NOT accomplished $ value is INVALID.
-						In case that as value as any parameters given are INVALID, throws an error.
-					*/
-					var counter = 0;
-					// Loops throw the criteria parameters
-					for(let property in options.length){
-						// Check the criteria
-						switch (property) {
-							case 'min':
-								if (value.toString().length >= options.length[property]) {counter++;} else {counter--;}
-								break;
-							case 'max':
-								if (value.toString().length <= options.length[property]) {counter++;} else {counter--;}
-								break;
-							default:
-								throw `Sorry, '${property}' is an invalid parameter from 'length' property in options on ${options.name}.`;
-						}
-					}
-					if (counter > 0) {
-						return value;
-					} else {
-						throw `Sorry, ${value} is an invalid length of value on parameter '${options.name}'`;
-					}
-					break;
-			}
+				} else {
+					throw `Sorry, ${value} is an invalid length of value on parameter '${options.name}'`;
+				}
+				break;
 		}
 	}
+}
+// Process the info given in a form to run any of the two methods from the API (create or send link).
+const processWAForm = (event) => {
+	event.preventDefault();
+	const parent = event.target.parentNode;
+	const WAForm = {
+		code: parent.querySelector('*[name=WA-code]'),
+		phone: parent.querySelector('*[name=WA-phone]'),
+		text: parent.querySelector('*[name=WA-text]'),
+		submit: parent.querySelector('*[name=WA-submit]'),
+		result: parent.querySelector('.WA-result'),
+	}
+	
+	var WAInfo = {};
+	for (let element in WAForm) {
+		switch (element){
+			case 'submit': break;
+			case 'result': break;
+			case 'text':
+				WAInfo[element] = WAForm[element].value;
+				break;
+			default:
+				WAInfo[element] = Number(WAForm[element].value);
+		}
+	}
+	try {
+		const WAObject = new CustomWA(WAInfo['code'], WAInfo['phone']);
+		console.log(WAForm);
+		switch (event.target.dataset.type) {
+			case 'create':
+				WAForm.result.innerText = WAObject.createLink(WAInfo['text']);
+				break;
+			case 'send':
+				WAObject.sendLink(WAInfo['text']);
+				break;
+			default:
+				alert('Sorry, invalid type of submit');
+		}
+	} catch (e) {
+		console.error(e);
+		return;
+	}
+}
