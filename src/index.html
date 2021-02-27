@@ -7,7 +7,7 @@
 </head>
 <body>
 	<button id="createLink">Crear Link</button>
-	<p><a href="" id="link"></a></p>
+	<p><a href="" id="link" style="word-break: break-all;"></a></p>
 
 	<button id="sendLink">Enviar Link</button>
 	<!-- Calling API library -->
@@ -19,7 +19,7 @@
 		let wa = new CustomWA(58, 4146882171);
 		document.getElementById('createLink').addEventListener('click', () => {
 			const tag = document.getElementById('link');
-			let url = wa.getLink('Some Text');
+			let url = wa.createLink(['hi', "what's up"]);
 			tag.href = url;
 			tag.innerHTML = url;
 		});
