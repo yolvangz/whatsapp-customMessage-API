@@ -53,11 +53,18 @@ class CustomWA {
 		passed by a parameter (optional)
 	*/
 	getLink (text = null) {
-		if (text == null) {
+		if (text === null) {
 			return encodeURI(`${this.url}phone=${this.phone}`);
 		} else {
 			return encodeURI(`${this.url}phone=${this.phone}&text=${text}`);
 		}
+	}
+	/*
+		It runs the method getLink() & send the got URL to another browser's window, automated.
+	*/
+	sendLink (text = undefined) {
+		const WAlink = this.getLink(text);
+		window.open(WAlink);
 	}
 }
 

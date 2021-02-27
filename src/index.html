@@ -6,22 +6,26 @@
 	<title>Testing WhatsApp-customMessage-API</title>
 </head>
 <body>
-	<a href="" id="link">Link WA</a>
-	<!-- Calling main.js file -->
+	<button id="createLink">Crear Link</button>
+	<p><a href="" id="link"></a></p>
+
+	<button id="sendLink">Enviar Link</button>
+	<!-- Calling API library -->
 	<script src="wa-custom.js"></script>
 	<script>
 		// Code to initialize API & use it
 		"use strict"
 
 		let wa = new CustomWA(58, 4146882171);
-		console.log(wa);
-		console.log(wa.code);
-		console.log(wa.number);
-		console.log(wa.phone);
-		let WALink = wa.getLink("What's *up*");
-		console.log(wa.getLink(WALink));
-
-		document.getElementById('link').href = WALink;
+		document.getElementById('createLink').addEventListener('click', () => {
+			const tag = document.getElementById('link');
+			let url = wa.getLink('Some Text');
+			tag.href = url;
+			tag.innerHTML = url;
+		});
+		document.getElementById('sendLink').addEventListener('click', () => {
+			wa.sendLink('Some *ANOTHER* text');
+		});
 	</script>
 </body>
 </html>
